@@ -1,0 +1,339 @@
+<!-- ODrive Connection Node -->
+<script type="text/javascript">
+    RED.nodes.registerType('odrive-connection', {
+        category: 'ODrive',
+        color: '#a6d1e6',
+        defaults: {
+            name: {value: ""},
+            instanceId: {value: "default"}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "serial.png",
+        label: function() {
+            return this.name || "ODrive Connect";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="odrive-connection">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-instanceId"><i class="fa fa-id-badge"></i> Instance ID</label>
+        <input type="text" id="node-input-instanceId" placeholder="default">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="odrive-connection">
+    <p>Connects to an ODrive motor controller via USB.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">any</span></dt>
+        <dd>Triggers the connection attempt</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>Connection status and ODrive info (vbus_voltage, serial_number)</dd>
+    </dl>
+</script>
+
+<!-- ODrive Configuration Node -->
+<script type="text/javascript">
+    RED.nodes.registerType('odrive-config', {
+        category: 'ODrive',
+        color: '#a6d1e6',
+        defaults: {
+            name: {value: ""},
+            instanceId: {value: "default"},
+            dcBusOvervoltage: {value: 26},
+            dcBusUndervoltage: {value: 20},
+            dcMaxPositiveCurrent: {value: 10},
+            dcMaxNegativeCurrent: {value: -10},
+            motorType: {value: "HIGH_CURRENT"},
+            torqueConstant: {value: 0.02506060606060606},
+            polePairs: {value: 7},
+            currentSoftMax: {value: 40},
+            currentHardMax: {value: 60},
+            calibrationCurrent: {value: 10},
+            resistanceCalibMaxVoltage: {value: 2},
+            torqueSoftMin: {value: -0.2004848484848485},
+            torqueSoftMax: {value: 0.2004848484848485},
+            velGain: {value: 0.167}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "cog.png",
+        label: function() {
+            return this.name || "ODrive Config";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="odrive-config">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-instanceId"><i class="fa fa-id-badge"></i> Instance ID</label>
+        <input type="text" id="node-input-instanceId" placeholder="default">
+    </div>
+    
+    <h3>DC Bus Configuration</h3>
+    <div class="form-row">
+        <label for="node-input-dcBusOvervoltage">Overvoltage Trip (V)</label>
+        <input type="number" id="node-input-dcBusOvervoltage" placeholder="26">
+    </div>
+    <div class="form-row">
+        <label for="node-input-dcBusUndervoltage">Undervoltage Trip (V)</label>
+        <input type="number" id="node-input-dcBusUndervoltage" placeholder="20">
+    </div>
+    <div class="form-row">
+        <label for="node-input-dcMaxPositiveCurrent">Max Positive Current (A)</label>
+        <input type="number" id="node-input-dcMaxPositiveCurrent" placeholder="10">
+    </div>
+    <div class="form-row">
+        <label for="node-input-dcMaxNegativeCurrent">Max Negative Current (A)</label>
+        <input type="number" id="node-input-dcMaxNegativeCurrent" placeholder="-10">
+    </div>
+    
+    <h3>Motor Configuration</h3>
+    <div class="form-row">
+        <label for="node-input-motorType">Motor Type</label>
+        <select id="node-input-motorType">
+            <option value="HIGH_CURRENT">High Current</option>
+            <option value="GIMBAL">Gimbal</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-torqueConstant">Torque Constant</label>
+        <input type="number" id="node-input-torqueConstant" step="0.001" placeholder="0.025">
+    </div>
+    <div class="form-row">
+        <label for="node-input-polePairs">Pole Pairs</label>
+        <input type="number" id="node-input-polePairs" placeholder="7">
+    </div>
+    <div class="form-row">
+        <label for="node-input-currentSoftMax">Current Soft Max (A)</label>
+        <input type="number" id="node-input-currentSoftMax" placeholder="40">
+    </div>
+    <div class="form-row">
+        <label for="node-input-currentHardMax">Current Hard Max (A)</label>
+        <input type="number" id="node-input-currentHardMax" placeholder="60">
+    </div>
+    <div class="form-row">
+        <label for="node-input-calibrationCurrent">Calibration Current (A)</label>
+        <input type="number" id="node-input-calibrationCurrent" placeholder="10">
+    </div>
+    
+    <h3>Control Configuration</h3>
+    <div class="form-row">
+        <label for="node-input-velGain">Velocity Gain</label>
+        <input type="number" id="node-input-velGain" step="0.001" placeholder="0.167">
+    </div>
+    <div class="form-row">
+        <label for="node-input-torqueSoftMin">Torque Soft Min</label>
+        <input type="number" id="node-input-torqueSoftMin" step="0.01" placeholder="-0.2">
+    </div>
+    <div class="form-row">
+        <label for="node-input-torqueSoftMax">Torque Soft Max</label>
+        <input type="number" id="node-input-torqueSoftMax" step="0.01" placeholder="0.2">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="odrive-config">
+    <p>Configures ODrive motor controller parameters.</p>
+    <p>All parameters can be overridden via msg properties.</p>
+</script>
+
+<!-- ODrive Motor Control Node -->
+<script type="text/javascript">
+    RED.nodes.registerType('odrive-motor-control', {
+        category: 'ODrive',
+        color: '#a6d1e6',
+        defaults: {
+            name: {value: ""},
+            instanceId: {value: "default"},
+            controlMode: {value: "position"},
+            value: {value: 0},
+            velRampRate: {value: 16.67},
+            velLimit: {value: 10}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "arrow-in.png",
+        label: function() {
+            return this.name || "ODrive Control";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="odrive-motor-control">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-instanceId"><i class="fa fa-id-badge"></i> Instance ID</label>
+        <input type="text" id="node-input-instanceId" placeholder="default">
+    </div>
+    <div class="form-row">
+        <label for="node-input-controlMode">Control Mode</label>
+        <select id="node-input-controlMode">
+            <option value="position">Position</option>
+            <option value="velocity">Velocity</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-value">Value</label>
+        <input type="number" id="node-input-value" step="0.01" placeholder="0">
+    </div>
+    <div class="form-row">
+        <label for="node-input-velRampRate">Velocity Ramp Rate</label>
+        <input type="number" id="node-input-velRampRate" step="0.01" placeholder="16.67">
+    </div>
+    <div class="form-row">
+        <label for="node-input-velLimit">Velocity Limit</label>
+        <input type="number" id="node-input-velLimit" step="1" placeholder="10">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="odrive-motor-control">
+    <p>Controls ODrive motor in position or velocity mode.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>controlMode <span class="property-type">string</span></dt>
+        <dd>"position" or "velocity"</dd>
+        <dt>value <span class="property-type">number</span></dt>
+        <dd>Target position (turns) or velocity (turns/sec)</dd>
+    </dl>
+</script>
+
+<!-- ODrive Spin Coater Node -->
+<script type="text/javascript">
+    RED.nodes.registerType('odrive-spin-coater', {
+        category: 'ODrive',
+        color: '#a6d1e6',
+        defaults: {
+            name: {value: ""},
+            instanceId: {value: "default"},
+            motorRpm: {value: 1500},
+            acceleration: {value: 16.67},
+            spinTime: {value: 40}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "inject.png",
+        label: function() {
+            return this.name || "Spin Coater";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="odrive-spin-coater">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-instanceId"><i class="fa fa-id-badge"></i> Instance ID</label>
+        <input type="text" id="node-input-instanceId" placeholder="default">
+    </div>
+    <div class="form-row">
+        <label for="node-input-motorRpm">Motor RPM</label>
+        <input type="number" id="node-input-motorRpm" placeholder="1500">
+    </div>
+    <div class="form-row">
+        <label for="node-input-acceleration">Acceleration (rev/s²)</label>
+        <input type="number" id="node-input-acceleration" step="0.01" placeholder="16.67">
+    </div>
+    <div class="form-row">
+        <label for="node-input-spinTime">Spin Time (seconds)</label>
+        <input type="number" id="node-input-spinTime" placeholder="40">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="odrive-spin-coater">
+    <p>Executes a spin coating cycle with specified parameters.</p>
+    <p>The motor will ramp up to the target RPM, spin for the specified time, then ramp down and return to home position.</p>
+</script>
+
+<!-- ODrive Initialize Node -->
+<script type="text/javascript">
+    RED.nodes.registerType('odrive-initialize', {
+        category: 'ODrive',
+        color: '#a6d1e6',
+        defaults: {
+            name: {value: ""},
+            instanceId: {value: "default"},
+            testSequence: {value: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "debug.png",
+        label: function() {
+            return this.name || "ODrive Init";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="odrive-initialize">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-instanceId"><i class="fa fa-id-badge"></i> Instance ID</label>
+        <input type="text" id="node-input-instanceId" placeholder="default">
+    </div>
+    <div class="form-row">
+        <label for="node-input-testSequence">Run Test Sequence</label>
+        <input type="checkbox" id="node-input-testSequence" style="display: inline-block; width: auto; vertical-align: top;">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="odrive-initialize">
+    <p>Initializes the ODrive and optionally runs a test sequence.</p>
+</script>
+
+<!-- ODrive Status Node -->
+<script type="text/javascript">
+    RED.nodes.registerType('odrive-status', {
+        category: 'ODrive',
+        color: '#a6d1e6',
+        defaults: {
+            name: {value: ""},
+            instanceId: {value: "default"}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "status.png",
+        label: function() {
+            return this.name || "ODrive Status";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="odrive-status">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-instanceId"><i class="fa fa-id-badge"></i> Instance ID</label>
+        <input type="text" id="node-input-instanceId" placeholder="default">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="odrive-status">
+    <p>Gets the current status of the ODrive including position, velocity, current, and error states.</p>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>Complete ODrive status including position, velocity, current, errors, etc.</dd>
+    </dl>
+</script>

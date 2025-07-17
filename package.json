@@ -1,0 +1,30 @@
+{
+  "name": "node-red-contrib-odrive",
+  "version": "4.0.0",
+  "description": "Node-RED nodes for ODrive motor controller with spin coating support",
+  "keywords": [
+    "node-red",
+    "odrive",
+    "motor",
+    "spincoater",
+    "control"
+  ],
+  "author": "Joe Schroedl",
+  "license": "",
+  "node-red": {
+    "nodes": {
+      "odrive": "odrive.js"
+    }
+  },
+  "dependencies": {
+    "python-shell": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/corndog2000/node-red-contrib-odrive.git"
+  },
+  "bugs": {
+    "url": "https://github.com/corndog2000/node-red-contrib-odrive/issues"
+  },
+  "homepage": "https://github.com/corndog2000/node-red-contrib-odrive#readme"
+}
