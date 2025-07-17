@@ -1,0 +1,452 @@
+[
+    {
+        "id": "ed32cbbaa5753264",
+        "type": "tab",
+        "label": "ODrive",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "88cbd0cfc20b4e68",
+        "type": "inject",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "10",
+        "topic": "",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "55fbf74fda49a58d"
+            ]
+        ]
+    },
+    {
+        "id": "55fbf74fda49a58d",
+        "type": "odrive-status",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "x": 340,
+        "y": 80,
+        "wires": [
+            [
+                "9feb0291c5e9b778"
+            ]
+        ]
+    },
+    {
+        "id": "9feb0291c5e9b778",
+        "type": "debug",
+        "z": "ed32cbbaa5753264",
+        "name": "ODrive Status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "bf98d35e9dc15e9e",
+        "type": "inject",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "2",
+        "topic": "",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "bf15161b808211f9"
+            ]
+        ]
+    },
+    {
+        "id": "bf15161b808211f9",
+        "type": "odrive-connection",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "x": 340,
+        "y": 140,
+        "wires": [
+            [
+                "7361c9fd3adaded6"
+            ]
+        ]
+    },
+    {
+        "id": "7361c9fd3adaded6",
+        "type": "odrive-config",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "dcBusOvervoltage": 26,
+        "dcBusUndervoltage": 20,
+        "dcMaxPositiveCurrent": 10,
+        "dcMaxNegativeCurrent": -10,
+        "motorType": "HIGH_CURRENT",
+        "torqueConstant": "0.0250",
+        "polePairs": 7,
+        "currentSoftMax": 40,
+        "currentHardMax": 60,
+        "calibrationCurrent": 10,
+        "resistanceCalibMaxVoltage": 2,
+        "torqueSoftMin": "-0.200",
+        "torqueSoftMax": "0.200",
+        "velGain": 0.167,
+        "x": 560,
+        "y": 140,
+        "wires": [
+            [
+                "481b86a52e8cc7fe"
+            ]
+        ]
+    },
+    {
+        "id": "481b86a52e8cc7fe",
+        "type": "odrive-initialize",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "testSequence": true,
+        "x": 770,
+        "y": 140,
+        "wires": [
+            [
+                "9feb0291c5e9b778"
+            ]
+        ]
+    },
+    {
+        "id": "8b37af52222bd1fd",
+        "type": "odrive-spin-coater",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "motorRpm": 1500,
+        "acceleration": 16.67,
+        "spinTime": 40,
+        "x": 330,
+        "y": 200,
+        "wires": [
+            [
+                "9feb0291c5e9b778"
+            ]
+        ]
+    },
+    {
+        "id": "57df2be506083474",
+        "type": "inject",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "8b37af52222bd1fd"
+            ]
+        ]
+    },
+    {
+        "id": "e65a4d08dcf49327",
+        "type": "odrive-motor-control",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "controlMode": "position",
+        "value": "0",
+        "velRampRate": 16.67,
+        "velLimit": 10,
+        "x": 340,
+        "y": 260,
+        "wires": [
+            [
+                "9feb0291c5e9b778"
+            ]
+        ]
+    },
+    {
+        "id": "99ee5139c38344de",
+        "type": "inject",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "e65a4d08dcf49327"
+            ]
+        ]
+    },
+    {
+        "id": "c926130a35020844",
+        "type": "inject",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 690,
+        "y": 320,
+        "wires": [
+            [
+                "44304de4fa51c497"
+            ]
+        ]
+    },
+    {
+        "id": "44304de4fa51c497",
+        "type": "odrive-motor-control",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "controlMode": "position",
+        "value": "0.25",
+        "velRampRate": 16.67,
+        "velLimit": 10,
+        "x": 1060,
+        "y": 320,
+        "wires": [
+            [
+                "3a3a3b1202518dbc",
+                "bd31d6e12b1860a1"
+            ]
+        ]
+    },
+    {
+        "id": "d9cc13a73cc80249",
+        "type": "inject",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 690,
+        "y": 380,
+        "wires": [
+            [
+                "d18dd864d6c67c0a"
+            ]
+        ]
+    },
+    {
+        "id": "d18dd864d6c67c0a",
+        "type": "odrive-motor-control",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "controlMode": "position",
+        "value": "0.5",
+        "velRampRate": 16.67,
+        "velLimit": 10,
+        "x": 1060,
+        "y": 380,
+        "wires": [
+            [
+                "3a3a3b1202518dbc",
+                "66dfd5656b5281e3"
+            ]
+        ]
+    },
+    {
+        "id": "3d7cb51666aae50b",
+        "type": "inject",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 690,
+        "y": 440,
+        "wires": [
+            [
+                "9443671c7aea39c6"
+            ]
+        ]
+    },
+    {
+        "id": "9443671c7aea39c6",
+        "type": "odrive-motor-control",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "controlMode": "position",
+        "value": "0.75",
+        "velRampRate": 16.67,
+        "velLimit": 10,
+        "x": 1060,
+        "y": 440,
+        "wires": [
+            [
+                "3a3a3b1202518dbc",
+                "302d0d28182eccf8"
+            ]
+        ]
+    },
+    {
+        "id": "2863b866701edf3a",
+        "type": "odrive-motor-control",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "instanceId": "default",
+        "controlMode": "position",
+        "value": "1",
+        "velRampRate": 16.67,
+        "velLimit": 10,
+        "x": 1060,
+        "y": 500,
+        "wires": [
+            [
+                "3a3a3b1202518dbc"
+            ]
+        ]
+    },
+    {
+        "id": "da4638dffae71c53",
+        "type": "inject",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 690,
+        "y": 500,
+        "wires": [
+            [
+                "2863b866701edf3a"
+            ]
+        ]
+    },
+    {
+        "id": "3a3a3b1202518dbc",
+        "type": "debug",
+        "z": "ed32cbbaa5753264",
+        "name": "ODrive Position Control",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1510,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "bd31d6e12b1860a1",
+        "type": "delay",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 380,
+        "wires": [
+            [
+                "d18dd864d6c67c0a"
+            ]
+        ]
+    },
+    {
+        "id": "66dfd5656b5281e3",
+        "type": "delay",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 440,
+        "wires": [
+            [
+                "9443671c7aea39c6"
+            ]
+        ]
+    },
+    {
+        "id": "302d0d28182eccf8",
+        "type": "delay",
+        "z": "ed32cbbaa5753264",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 500,
+        "wires": [
+            [
+                "2863b866701edf3a"
+            ]
+        ]
+    }
+]
