@@ -206,10 +206,18 @@ except Exception as e:
         
         node.on('input', function(msg) {
             const instanceId = config.instanceId || 'default';
-            const controlMode = config.controlMode || msg.controlMode || 'position';
-            const value = config.value || msg.value || 0;
-            const velRampRate = config.velRampRate || msg.velRampRate || 16.67;
-            const velLimit = config.velLimit || msg.velLimit || 10;
+            
+            // Check if msg.payload contains the values
+            const msgValue = msg.payload?.value !== undefined ? msg.payload.value : msg.value;
+            const msgControlMode = msg.payload?.controlMode || msg.controlMode;
+            const msgVelRampRate = msg.payload?.velRampRate || msg.velRampRate;
+            const msgVelLimit = msg.payload?.velLimit || msg.velLimit;
+            
+            // Use msg values if present, otherwise fall back to config
+            const controlMode = msgControlMode || config.controlMode || 'position';
+            const value = msgValue !== undefined ? msgValue : (config.value || 0);
+            const velRampRate = msgVelRampRate || config.velRampRate || 16.67;
+            const velLimit = msgVelLimit || config.velLimit || 10;
             
             let pythonCode = '';
             
