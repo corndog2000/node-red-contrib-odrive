@@ -349,6 +349,7 @@ except Exception as e:
             const instanceId = config.instanceId || 'default';
             const motorRpm = config.motorRpm || msg.motorRpm || 1500;
             const acceleration = config.acceleration || msg.acceleration || 16.67;
+            const deceleration = config.deceleration || msg.deceleration || 16.67;
             const spinTime = config.spinTime || msg.spinTime || 40;
             
             const odriveRevs = motorRpm / 60;
@@ -363,23 +364,31 @@ from odrive.enums import InputMode, ControlMode, AxisState
 try:
     odrv0 = odrive.find_any()
     
-    # Configure for velocity control
+    # Configure for velocity control with acceleration
     odrv0.axis0.controller.config.vel_ramp_rate = ${acceleration}
     odrv0.axis0.controller.config.control_mode = ControlMode.VELOCITY_CONTROL
     odrv0.axis0.controller.config.input_mode = InputMode.VEL_RAMP
     odrv0.axis0.controller.config.vel_limit = 90
     
-    # Start spinning
+    # Start spinning (ramp up with acceleration rate)
     odrv0.axis0.controller.input_vel = ${odriveRevs}
     
-    # Wait for spin time
+    # Wait for ramp up to complete (approximate time based on target speed and acceleration)
+    ramp_up_time = ${odriveRevs} / ${acceleration}
+    time.sleep(ramp_up_time)
+    
+    # Maintain spin speed for the specified time
     time.sleep(${spinTime})
     
-    # Stop spinning
+    # Configure deceleration rate for stopping
+    odrv0.axis0.controller.config.vel_ramp_rate = ${deceleration}
+    
+    # Stop spinning (ramp down with deceleration rate)
     odrv0.axis0.controller.input_vel = 0
     
-    # Wait for motor to stop
-    time.sleep(2)
+    # Wait for motor to decelerate to stop (approximate time based on current speed and deceleration)
+    ramp_down_time = ${odriveRevs} / ${deceleration}
+    time.sleep(ramp_down_time + 0.5)  # Add small buffer to ensure complete stop
     
     # Return to position control mode
     odrv0.axis0.controller.config.control_mode = ControlMode.POSITION_CONTROL
@@ -402,6 +411,8 @@ try:
     result = {
         "status": "complete",
         "rpm": ${motorRpm},
+        "acceleration": ${acceleration},
+        "deceleration": ${deceleration},
         "spin_time": ${spinTime}
     }
     print(json.dumps(result))
