@@ -241,6 +241,7 @@ try:
     # Set up position control
     odrv0.axis0.controller.config.control_mode = ControlMode.POSITION_CONTROL
     odrv0.axis0.controller.config.input_mode = InputMode.PASSTHROUGH
+    odrv0.axis0.controller.config.absolute_setpoints = True
     odrv0.axis0.controller.config.circular_setpoints = True
     odrv0.axis0.controller.config.vel_limit = ${velLimit}
     
@@ -393,6 +394,7 @@ try:
     # Return to position control mode
     odrv0.axis0.controller.config.control_mode = ControlMode.POSITION_CONTROL
     odrv0.axis0.controller.config.input_mode = InputMode.PASSTHROUGH
+    odrv0.axis0.controller.config.absolute_setpoints = True
     odrv0.axis0.controller.config.circular_setpoints = True
     odrv0.axis0.controller.config.vel_limit = 10
     
@@ -465,6 +467,7 @@ try:
     odrv0 = odrive.find_any()
     
     # Set up initial state
+    odrv0.axis0.controller.config.absolute_setpoints = True
     odrv0.axis0.controller.config.circular_setpoints = True
     odrv0.axis0.pos_vel_mapper.config.offset_valid = True
     odrv0.axis0.controller.config.input_mode = InputMode.PASSTHROUGH
