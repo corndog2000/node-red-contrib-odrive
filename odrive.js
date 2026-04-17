@@ -348,12 +348,34 @@ except Exception as e:
         
         node.on('input', function(msg) {
             const instanceId = config.instanceId || 'default';
-            const motorRpm = config.motorRpm || msg.motorRpm || 1500;
-            const acceleration = config.acceleration || msg.acceleration || 16.67;
-            const deceleration = config.deceleration || msg.deceleration || 16.67;
-            const spinTime = config.spinTime || msg.spinTime || 40;
-            
+
+            // Resolve a parameter with precedence: msg.payload.X > msg.X > config.X > default.
+            // Uses `!== undefined` so explicit 0 values are honored, and coerces to Number
+            // so string values from msg or config don't break template-literal math below.
+            const resolve = (name, defaultValue) => {
+                let raw;
+                if (msg.payload && typeof msg.payload === 'object' && msg.payload[name] !== undefined) {
+                    raw = msg.payload[name];
+                } else if (msg[name] !== undefined) {
+                    raw = msg[name];
+                } else if (config[name] !== undefined && config[name] !== '' && config[name] !== null) {
+                    raw = config[name];
+                } else {
+                    raw = defaultValue;
+                }
+                const n = Number(raw);
+                return Number.isFinite(n) ? n : defaultValue;
+            };
+
+            const motorRpm      = resolve('motorRpm', 1500);
+            const acceleration  = resolve('acceleration', 16.67);
+            const deceleration  = resolve('deceleration', 5);
+            const spinTime      = resolve('spinTime', 30);
+
             const odriveRevs = motorRpm / 60;
+
+            // Echo the resolved parameters so downstream nodes / debug see what was actually used
+            msg.spinParams = { motorRpm, acceleration, deceleration, spinTime };
             
             const pythonCode = `
 import odrive
@@ -423,7 +445,7 @@ except Exception as e:
     print(json.dumps(result))
 `;
             
-            node.status({fill: "blue", shape: "dot", text: "spinning..."});
+            node.status({fill: "blue", shape: "dot", text: `spinning ${motorRpm} RPM / ${spinTime}s`});
             
             executePython(pythonCode, (err, result) => {
                 if (err) {
